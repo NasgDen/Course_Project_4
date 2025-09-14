@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Список Получателей{% endblock %}
+
+{% block content %}
+
+{% for recipient in recipients %}
+
+<p>EMAIL: {{recipient.email}}</p>
+<p>ФИО: {{recipient.full_name}}</p>
+<p>Коментарий: {{recipient.comment}}</p>
+
+{% endfor %}
+
+{% endblock %}
