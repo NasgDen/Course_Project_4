@@ -6,9 +6,11 @@
 
 {% for recipient in recipients %}
 
-<p>EMAIL: {{recipient.email}}</p>
-<p>ФИО: {{recipient.full_name}}</p>
-<p>Коментарий: {{recipient.comment}}</p>
+<a href="#"  class="content">EMAIL: {{recipient.email}}</a>
+<p class="content">ФИО: {{recipient.full_name}}</p>
+<p class="content">Коментарий: {{recipient.comment}}</p>
+<a href="{% url 'message:recipient_update' recipient.pk%}" class="btn btn_primery">Изменить</a>
+<a href="{% url 'message:recipient_delete' recipient.pk%}" class="btn btn_primery">Удалить</a>
 
 {% endfor %}
 

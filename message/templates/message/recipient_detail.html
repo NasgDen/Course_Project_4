@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Детальная игформация о Получателе{% endblock %}
+
+{% block content %}
+
+<p class="content">EMAIL: {{recipient.email}}</p>
+<p class="content">ФИО: {{recipient.full_name}}</p>
+<p class="content">Коментарий: {{recipient.comment}}</p>
+
+
+{% endblock %}

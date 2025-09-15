@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
 from .models import MailingRecipient, Message, Distribution
 
@@ -32,4 +32,11 @@ class MailingRecipientDeleteView(DeleteView):
     template_name = 'message/recipient_delete_confirm.html'
     context_object_name = 'recipient'
     success_url = reverse_lazy('message:recipient_list')
+
+
+class MailingRecipientDetailView(DetailView):
+    """ Класс реализующий интерфейс для отображения детальной информации о товаре """
+    model = MailingRecipient
+    template_name = "'message/recipient_detail.html"
+    context_object_name = 'recipient'
 
