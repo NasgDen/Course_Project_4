@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Список Получателей{% endblock %}
+
+{% block content %}
+
+{% for message in messages %}
+
+<p class="content">Тема письма: {{message.subject}}</p>
+<p class="content">Текст письма: {{message.text}}</p>
+<a href="{% url 'message:message_update' message.pk%}" class="btn btn_primery">Изменить</a>
+<a href="{% url 'message:message_delete' message.pk%}" class="btn btn_primery">Удалить</a>
+
+{% endfor %}
+
+{% endblock %}
