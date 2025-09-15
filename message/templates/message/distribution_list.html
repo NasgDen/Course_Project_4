@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Список Получателей{% endblock %}
+
+{% block content %}
+
+{% for distribution in distributions %}
+
+<p class="content">Получатели: {{distribution.recipients}}</p>
+<p class="content">Статус: {{distribution.status}}</p>
+<p class="content">Статус: {{distribution.message}}</p>
+<a href="{% url 'message:distribution_update' distribution.pk%}" class="btn btn_primery">Изменить</a>
+<a href="{% url 'message:distribution_delete' distribution.pk%}" class="btn btn_primery">Удалить</a>
+
+{% endfor %}
+
+{% endblock %}

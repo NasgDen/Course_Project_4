@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Создать рассылку{% endblock %}
+
+{% block content %}
+<h1>
+  {% if distribution %}
+    ФОРМА ИЗМЕНЕНИЯ РАССЫЛКИ
+  {% else %}
+    ФОРМА СОЗДАНИЯ РАССЫЛКИ
+  {% endif %}
+</h1>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if distribution %}
+    <button type="submit" class="btn btn_primery">Изменить</button>
+  {% else %}
+    <button type="submit" class="btn btn_primery">Добавить</button>
+  {% endif %}
+</form>
+
+{% endblock %}

@@ -69,3 +69,32 @@ class MessageDeleteView(DeleteView):
     context_object_name = 'message'
     success_url = reverse_lazy('message:message_list')
 
+
+class DistributionCreateView(CreateView):
+    model = Distribution
+    template_name = 'message/distribution_add.html'
+    fields = ['message', 'recipients',]
+    context_object_name = 'distribution'
+    success_url = reverse_lazy('message:distribution_list')
+
+
+class DistributionListView(ListView):
+    model = Distribution
+    template_name = 'message/distribution_list.html'
+    context_object_name = 'distributions'
+
+
+class DistributionUpdateView(UpdateView):
+    model = Distribution
+    template_name = 'message/distribution_add.html'
+    fields = ['message', 'recipients',]
+    context_object_name = 'distribution'
+    success_url = reverse_lazy('message:distribution_list')
+
+
+class DistributionDeleteView(DeleteView):
+    model =  Distribution
+    template_name = 'message/distribution_delete_confirm.html'
+    context_object_name = 'message'
+    success_url = reverse_lazy('message:distribution_list')
+
