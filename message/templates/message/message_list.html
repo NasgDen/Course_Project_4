@@ -8,6 +8,7 @@
 
 <p class="content">Тема письма: {{message.subject}}</p>
 <p class="content">Текст письма: {{message.text}}</p>
+<a href="{% url 'message:message_detail' message.pk%}" class="btn btn_primery">Подробнее</a>
 <a href="{% url 'message:message_update' message.pk%}" class="btn btn_primery">Изменить</a>
 <a href="{% url 'message:message_delete' message.pk%}" class="btn btn_primery">Удалить</a>
 

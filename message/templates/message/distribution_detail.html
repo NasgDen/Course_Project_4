@@ -4,11 +4,18 @@
 
 {% block content %}
 
+<p class="content">Получатели:</p>
+{% for recipient in distribution.recipients.all %}
+    <p class="content">{{recipient}}</p>
+{% endfor %}
 <p class="content">Дата и время первой отправки: {{distribution.datatime_first_sending}}</p>
 <p class="content">Дата и время окончания отправки: {{distribution.datetime_end_sending}}</p>
 <p class="content">Статус: {{distribution.status}}</p>
 <p class="content">Сообщение: {{distribution.message}}</p>
-<p class="content">Получатели: {{distribution.recipients}}</p>
+
+<a href="{% url 'message:distribution_update' distribution.pk%}" class="btn btn_primery">Изменить</a>
+<a href="{% url 'message:distribution_delete' distribution.pk%}" class="btn btn_primery">Удалить</a>
+<a href="{% url 'message:distribution_list' %}" class="btn btn_primery">Назад</a>
 
 
 {% endblock %}

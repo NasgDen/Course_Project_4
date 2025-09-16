@@ -9,6 +9,7 @@
 <p class="content">EMAIL: {{recipient.email}}</p>
 <p class="content">ФИО: {{recipient.full_name}}</p>
 <p class="content">Коментарий: {{recipient.comment}}</p>
+<a href="{% url 'message:recipient_detail' recipient.pk%}" class="btn btn_primery">Подробнее</a>
 <a href="{% url 'message:recipient_update' recipient.pk%}" class="btn btn_primery">Изменить</a>
 <a href="{% url 'message:recipient_delete' recipient.pk%}" class="btn btn_primery">Удалить</a>
 
