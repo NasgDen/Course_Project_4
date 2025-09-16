@@ -17,5 +17,11 @@
 <a href="{% url 'message:distribution_delete' distribution.pk%}" class="btn btn_primery">Удалить</a>
 <a href="{% url 'message:distribution_list' %}" class="btn btn_primery">Назад</a>
 
+    <form action="{% url 'message:send_message' distribution.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn_primery">Отправить</button>
+
+    </form>
+
 
 {% endblock %}

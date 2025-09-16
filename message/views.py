@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView, View
+
+from config.settings import EMAIL_HOST_USER, EMAIL_USE_SSL, EMAIL_USE_TLS
 
 from .models import MailingRecipient, Message, Distribution
 
@@ -134,4 +137,27 @@ class DistributionDetailView(DetailView):
     model = Distribution
     template_name = "message/distribution_detail.html"
     context_object_name = 'distribution'
+
+
+class SendMessageView(View):
+    """ Класс ревлизующий интерфейс для отправки сообщения """
+
+    def post(self, request,  *args, **kwargs):
+        distribution_id = kwargs["pk"]
+        distribution = get_object_or_404( Distribution, id=distribution_id)
+        self.send_message(distribution)
+        return redirect('message:distribution_list')
+
+    @staticmethod
+    def send_message(distribution):
+        """ Функция реализует оправке письма """
+        recipient_list = []
+        for recipient in distribution.recipients.all():
+            recipient_list.append(recipient.email)
+        subject = distribution.message.subject
+        message = distribution.message.text
+        from_email = EMAIL_HOST_USER
+        send_mail(subject, message, from_email, recipient_list)
+
+
 
