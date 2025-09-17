@@ -54,3 +54,26 @@ class Distribution(models.Model):
         verbose_name_plural = 'Рассылки'
         ordering = ['status',]
 
+class AttemptedMailing(models.Model):
+    """ Описание полей модель - Попытка рассылка """
+    SUCCESSFULLY = 'successful'
+    NOTSUCCESSFULLLY = 'not successful'
+
+    STATUS_CHOICES = [
+        (SUCCESSFULLY, 'Успешно'),
+        (NOTSUCCESSFULLLY, 'Не успешно'),
+    ]
+
+
+    attempt_datetime = models.DateTimeField(verbose_name='Дата и время попытки', help_text='Дата и время попытки', null=True, blank=True)
+    status = models.CharField(max_length=20, verbose_name='Статус', help_text='Статус', choices=STATUS_CHOICES, default='')
+    mail_server_response = models.TextField(verbose_name='Ответ почтового сервера', help_text='Ответ почтового сервера')
+    distribution = models.ForeignKey(Distribution, on_delete=models.CASCADE, related_name='attempted_mailing', verbose_name='Рассылка')
+
+    def __str__(self):
+        return f"{self.attempt_datetime }: {self.status}"
+
+    class Meta:
+        verbose_name = 'Попытка рассылка'
+        verbose_name_plural = 'Попытки рассылка'
+        ordering = ['status',]
