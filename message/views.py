@@ -4,9 +4,10 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView, View
 
-from config.settings import EMAIL_HOST_USER, EMAIL_USE_SSL, EMAIL_USE_TLS
+from config.settings import EMAIL_HOST_USER
 
 from .models import MailingRecipient, Message, Distribution, AttemptedMailing
+from .services import send_message, attempted_mailing
 
 
 class MailingRecipientCreateView(CreateView):
@@ -145,41 +146,10 @@ class SendMessageView(View):
 
     def post(self, request,  *args, **kwargs):
         distribution_id = kwargs["pk"]
-        # distribution = get_object_or_404( Distribution, id=distribution_id)
-        self.send_message(distribution_id)
+        error = send_message(distribution_id)
+        attempted_mailing(distribution_id, error)
         return redirect('message:distribution_list')
 
-    @staticmethod
-    def send_message(distribution_id):
-        """ Функция реализует оправке письма """
-        print("distribution_id - ", distribution_id)
-        distribution = get_object_or_404(Distribution, id=distribution_id)
-        recipient_list = []
-        for recipient in distribution.recipients.all():
-            recipient_list.append(recipient.email)
-        subject = distribution.message.subject
-        message = distribution.message.text
-        from_email = EMAIL_HOST_USER
-        distribution.status = "Запущена"
-        distribution.datatime_first_sending = timezone.now()
-        distribution.save()
-
-        try:
-            send_mail(subject, message, from_email, recipient_list)
-            distribution.status = "Завершена"
-            distribution.datetime_end_sending = timezone.now()
-            distribution.save()
-            attempt = AttemptedMailing.objects.create(attempt_datetime=timezone.now(),
-                                                      status='Успешно',
-                                                      mail_server_response='Письмо доставлено',
-                                                      distribution=distribution)
-            attempt.save()
-        except Exception as error:
-            attempt = AttemptedMailing.objects.create(attempt_datetime=timezone.now(),
-                                                      status='Не успешно',
-                                                      mail_server_response=error,
-                                                      distribution=distribution)
-            attempt.save()
 
 
 
