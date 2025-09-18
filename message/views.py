@@ -1,10 +1,7 @@
-from django.core.mail import send_mail
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
-from django.utils import timezone
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView, View
 
-from config.settings import EMAIL_HOST_USER
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView, View
 
 from .models import MailingRecipient, Message, Distribution, AttemptedMailing
 from .services import send_message, attempted_mailing
@@ -150,8 +147,17 @@ class SendMessageView(View):
         attempted_mailing(distribution_id, error)
         return redirect('message:distribution_list')
 
+class IndexListView(ListView):
+    """ Класс ревлизующий интерфейс главной страницы """
+    model = Distribution
+    template_name = "message/index.html"
+    context_object_name = 'distribution'
 
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['distribution_count_launched'] = Distribution.objects.filter(status='Запущена').count()
+        context['recipient_count'] = MailingRecipient.objects.count()
+        return context
 
 
 

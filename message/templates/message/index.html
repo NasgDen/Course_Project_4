@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Создать получателя{% endblock %}
+
+{% block content %}
+
+<h1>ГЛАВНАЯ СТРАНИЦА</h1>
+<p>Количество всех рассылок: {{ distribution | length }}</p>
+<p>Количество активных рассылок (со статусом 'Запущена'): {{ distribution_count_launched }}</p>
+<p>Количество уникальных получателей: {{ recipient_count }}</p>
+
+{% endblock %}
