@@ -3,10 +3,10 @@ import secrets
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 
 from config.settings import EMAIL_HOST_USER
-from users.forms import CustomUserCreationForm
+from users.forms import CustomUserCreationForm, CustomProfileForm
 from users.models import CustomUser
 
 
@@ -33,6 +33,15 @@ class RegistrationView(CreateView):
             recipient_list=[user.email]
         )
         return super().form_valid(form)
+
+
+class EditCustomUser(UpdateView):
+    """ Контроллер для редактирования профиля пользователя """
+    model = CustomUser
+    template_name = 'users/edit_user.html'
+    form_class = CustomProfileForm
+    success_url = reverse_lazy('message:index')
+
 
 def email_varification(request, token):
     user = get_object_or_404(CustomUser, token=token)

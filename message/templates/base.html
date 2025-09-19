@@ -15,7 +15,7 @@
                 <H1 class="header_title"> Заголовок сайта</H1>
                 <div class=buttonbox>
                     {% if user.is_authenticated %}
-                        <p>Пользователь: {{user.email}}</p>
+                                <a class="ms-3 my-0 mr-md-auto font-weight-normal text-decoration-none" href="/users/edit_user/{{user.pk}}/">Пользователь: {{user.email}}</a>
                         <form action="{% url 'users:logout' %}" method="post">
                              {% csrf_token %}
                         <button type="submit" class="btn btn_primery">ВЫХОД</button>
