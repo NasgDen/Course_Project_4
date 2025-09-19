@@ -1,12 +1,13 @@
 import secrets
 
+from django.contrib.auth.views import PasswordChangeView
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView
 
 from config.settings import EMAIL_HOST_USER
-from users.forms import CustomUserCreationForm, CustomProfileForm
+from users.forms import CustomUserCreationForm, CustomProfileForm, UserPasswordChangeForm
 from users.models import CustomUser
 
 
@@ -40,6 +41,14 @@ class EditCustomUser(UpdateView):
     model = CustomUser
     template_name = 'users/edit_user.html'
     form_class = CustomProfileForm
+    success_url = reverse_lazy('message:index')
+
+
+class UserPasswordChangeView(PasswordChangeView):
+    """ Контроллер для изменения пароля пользователя """
+    model = CustomUser
+    template_name = 'users/edit_user.html'
+    form_class = UserPasswordChangeForm
     success_url = reverse_lazy('message:index')
 
 

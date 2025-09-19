@@ -1,6 +1,6 @@
 import secrets
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 
 from users.models import CustomUser
 
@@ -29,3 +29,8 @@ class CustomProfileForm(StyleFormMixin, UserChangeForm):
     class Meta:
         model = CustomUser
         fields = ['email', 'username', 'first_name', 'last_name', 'phone_number', 'country',]
+
+
+class UserPasswordChangeForm(StyleFormMixin, PasswordChangeForm):
+    class Meta:
+        model = CustomUser
