@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
 
 </head>
@@ -11,15 +12,19 @@
 
     <div class="container center">
         <div class='header'>
-            <!-- <div class="header__positon"> -->
                 <H1 class="header_title"> Заголовок сайта</H1>
                 <div class=buttonbox>
-                    <button class="btn btn_primery">ВХОД</button>
-                    <button class="btn btn_primery">ВЫХОД</button>
-                    <button class="btn btn_primery">РЕГИСТРАЦИЯ</button>
+                    {% if user.is_authenticated %}
+                        <p>Пользователь: {{user.email}}</p>
+                        <form action="{% url 'users:logout' %}" method="post">
+                             {% csrf_token %}
+                        <button type="submit" class="btn btn_primery">ВЫХОД</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'users:login'%}" class="btn btn_primery">ВХОД</a>
+                        <a href="{% url 'users:registration'%}" class="btn btn_primery">РЕГИСТРАЦИЯ</a>
+                    {% endif %}
                 </div>
-            <!-- </div> -->
-
         </div>
         <div class="side_menu">
             {% include 'menu.html' %}

@@ -106,3 +106,8 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+LOGIN_REDIRECT_URL = 'message:index'
+LOGOUT_REDIRECT_URL = 'message:index'
+
+LOGIN_URL = 'users:login'
