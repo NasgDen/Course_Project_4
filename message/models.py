@@ -1,10 +1,15 @@
 from django.db import models
 
+from users.models import CustomUser
+
+
 class MailingRecipient(models.Model):
     """ Описание полей модель - Получатель рассылки """
     email = models.CharField(max_length=100, unique=True, help_text='Адрес электронной почты', verbose_name='email')
     full_name = models.CharField(max_length=150, verbose_name='Ф. И. О.', help_text='Ф. И. О.')
     comment = models.TextField(verbose_name='Коментарий', help_text='Коментарий')
+    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, related_name='mailing_recipient', verbose_name='Владелец',
+                              blank=True, null=True)
 
     def __str__(self):
         return f"{self.email} - {self.full_name}"
@@ -19,6 +24,10 @@ class Message(models.Model):
     """ Описание полей модель - Сообщение """
     subject = models.CharField(max_length=250, verbose_name='Тема письма', help_text='Тема письма')
     text = models.TextField(verbose_name='Тело письма', help_text='Тело письма')
+    comment = models.TextField(verbose_name='Коментарий', help_text='Коментарий', null=True, blank=True)
+    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, related_name='message', verbose_name='Владелец',
+                              blank=True, null=True)
+
 
     def __str__(self):
         return f"{self.subject}"
@@ -45,6 +54,8 @@ class Distribution(models.Model):
     status = models.CharField(max_length=10, verbose_name='Статус', help_text='Статус', choices=STATUS_CHOICES, default='Создана')
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='distributions', verbose_name='Сообщение')
     recipients = models.ManyToManyField(MailingRecipient, related_name='distributions', verbose_name='Получатели')
+    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, related_name='distributions', verbose_name='Владелец',
+                              blank=True, null=True)
 
     def __str__(self):
         return f"{self.recipients} - {self.message} - {self.status}"

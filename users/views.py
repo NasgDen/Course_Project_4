@@ -62,28 +62,29 @@ class UserPasswordReset(SuccessMessageMixin, PasswordResetView):
     template_name = 'users/password_reset.html'
     email_template_name = 'users/password_reset_email.html'
     from_email = EMAIL_HOST_USER
-    # form_class = UserSetNewPasswordForm
+    form_class = UserPasswordResetForm
     success_url = reverse_lazy('users:password_reset_done')
 
 
-
 class UserPasswordResetDoneView(PasswordResetDoneView):
+   """ Контроллер для использования шаблона при успешном сбросе пароля """
+
    template_name='users/password_reset_done.html'
 
 
 class UserPasswordResetConfirmView(SuccessMessageMixin, PasswordResetConfirmView):
-     """ Представление установки нового пароля """
+     """ Контроллер для представление установки нового пароля """
 
+     form_class = UserSetNewPasswordForm
      template_name = 'users/password_reset_confirm.html'
      success_url = reverse_lazy('users:password_reset_complete')
 
 
 class UserPasswordResetCompleteView(PasswordResetCompleteView):
+    """ Контроллер для использования шаблона при успешном восстановлении пароля """
 
     template_name='users/password_reset_complete.html'
     # form_class = UserSetNewPasswordForm
-
-
 
 def email_varification(request, token):
     user = get_object_or_404(CustomUser, token=token)

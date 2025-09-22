@@ -46,6 +46,7 @@ class MailingRecipientDeleteView(DeleteView):
 
 class MailingRecipientDetailView(DetailView):
     """ Класс реализующий интерфейс для отображения детальной информации о получателе сообщения """
+
     model = MailingRecipient
     template_name = "message/recipient_detail.html"
     context_object_name = 'recipient'
@@ -133,6 +134,7 @@ class DistributionDeleteView(DeleteView):
 
 class DistributionDetailView(DetailView):
     """ Класс реализующий интерфейс для отображения детальной информации о рассылке """
+
     model = Distribution
     template_name = "message/distribution_detail.html"
     context_object_name = 'distribution'
@@ -149,6 +151,7 @@ class SendMessageView(View):
 
 class IndexListView(ListView):
     """ Класс ревлизующий интерфейс главной страницы """
+
     model = Distribution
     template_name = "message/index.html"
     context_object_name = 'distribution'
@@ -157,6 +160,22 @@ class IndexListView(ListView):
         context = super().get_context_data(**kwargs)
         context['distribution_count_launched'] = Distribution.objects.filter(status='Запущена').count()
         context['recipient_count'] = MailingRecipient.objects.count()
+        return context
+
+
+class StatisticView(ListView):
+    """ Класс реализующий интерфейс для отобраения информации о попытках рассылок для зарегистрированного пользователя """
+
+    model = Distribution
+    template_name = "message/statistic.html"
+    context_object_name = 'distribution'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        attempted = AttemptedMailing.objects.filter(distribution__owner=self.request.user)
+        context['attempted_mailing_filter_by_user_successful'] = attempted.filter(status='Успешно').count()
+        context['attempted_mailing_filter_by_user_not_successful'] = attempted.filter(status='Не успешно').count()
+        context['distribution_count_сompleted'] = Distribution.objects.filter(status='Завершена' ,owner=self.request.user).count()
         return context
 
 
