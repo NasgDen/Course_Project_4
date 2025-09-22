@@ -1,6 +1,6 @@
 import secrets
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
 
 from users.models import CustomUser
 
@@ -32,5 +32,15 @@ class CustomProfileForm(StyleFormMixin, UserChangeForm):
 
 
 class UserPasswordChangeForm(StyleFormMixin, PasswordChangeForm):
+    class Meta:
+        model = CustomUser
+
+
+class UserPasswordResetForm(StyleFormMixin, PasswordResetForm):
+    class Meta:
+        model = CustomUser
+
+
+class UserSetNewPasswordForm(StyleFormMixin, SetPasswordForm):
     class Meta:
         model = CustomUser

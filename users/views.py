@@ -1,13 +1,16 @@
 import secrets
 
-from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.views import PasswordChangeView, PasswordResetView, PasswordResetConfirmView, \
+    PasswordResetDoneView, PasswordResetCompleteView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView
 
 from config.settings import EMAIL_HOST_USER
-from users.forms import CustomUserCreationForm, CustomProfileForm, UserPasswordChangeForm
+from users.forms import CustomUserCreationForm, CustomProfileForm, UserPasswordChangeForm, UserPasswordResetForm, \
+    UserSetNewPasswordForm
 from users.models import CustomUser
 
 
@@ -46,10 +49,40 @@ class EditCustomUser(UpdateView):
 
 class UserPasswordChangeView(PasswordChangeView):
     """ Контроллер для изменения пароля пользователя """
+
     model = CustomUser
     template_name = 'users/edit_user.html'
     form_class = UserPasswordChangeForm
     success_url = reverse_lazy('message:index')
+
+
+class UserPasswordReset(SuccessMessageMixin, PasswordResetView):
+    """ Контроллер для сброса пароля пользователя """
+
+    template_name = 'users/password_reset.html'
+    email_template_name = 'users/password_reset_email.html'
+    from_email = EMAIL_HOST_USER
+    # form_class = UserSetNewPasswordForm
+    success_url = reverse_lazy('users:password_reset_done')
+
+
+
+class UserPasswordResetDoneView(PasswordResetDoneView):
+   template_name='users/password_reset_done.html'
+
+
+class UserPasswordResetConfirmView(SuccessMessageMixin, PasswordResetConfirmView):
+     """ Представление установки нового пароля """
+
+     template_name = 'users/password_reset_confirm.html'
+     success_url = reverse_lazy('users:password_reset_complete')
+
+
+class UserPasswordResetCompleteView(PasswordResetCompleteView):
+
+    template_name='users/password_reset_complete.html'
+    # form_class = UserSetNewPasswordForm
+
 
 
 def email_varification(request, token):
