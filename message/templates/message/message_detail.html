@@ -4,11 +4,14 @@
 
 {% block content %}
 
-<p class="content">EMAIL: {{message.email}}</p>
-<p class="content">ФИО: {{message.text}}</p>
-
-<a href="{% url 'message:message_update' message.pk%}" class="btn btn_primery">Изменить</a>
-<a href="{% url 'message:message_delete' message.pk%}" class="btn btn_primery">Удалить</a>
+<p class="content">Тема письма: {{message.subject}}</p>
+<p class="content">Текст письма: {{message.text}}</p>
+{% if "message.change_message" in perms %}
+    <a href="{% url 'message:message_update' message.pk%}" class="btn btn_primery">Изменить</a>
+{% endif %}
+{% if "message.delete_message" in perms %}
+    <a href="{% url 'message:message_delete' message.pk%}" class="btn btn_primery">Удалить</a>
+{% endif %}
 <a href="{% url 'message:message_list' %}" class="btn btn_primery">Назад</a>
 
 {% endblock %}

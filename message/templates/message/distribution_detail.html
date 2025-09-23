@@ -13,15 +13,20 @@
 <p class="content">Статус: {{distribution.status}}</p>
 <p class="content">Сообщение: {{distribution.message}}</p>
 
-<a href="{% url 'message:distribution_update' distribution.pk%}" class="btn btn_primery">Изменить</a>
-<a href="{% url 'message:distribution_delete' distribution.pk%}" class="btn btn_primery">Удалить</a>
+{% if "message.change_distribution" in perms %}
+    <a href="{% url 'message:distribution_update' distribution.pk%}" class="btn btn_primery">Изменить</a>
+{% endif %}
+{% if "message.change_distribution" in perms %}
+    <a href="{% url 'message:distribution_delete' distribution.pk%}" class="btn btn_primery">Удалить</a>
+{% endif %}
 <a href="{% url 'message:distribution_list' %}" class="btn btn_primery">Назад</a>
 
+{% if distribution.owner == user %}
     <form action="{% url 'message:send_message' distribution.id %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn_primery">Отправить</button>
-
     </form>
+{% endif %}
 
 
 {% endblock %}
