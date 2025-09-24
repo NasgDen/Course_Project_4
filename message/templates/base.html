@@ -18,11 +18,11 @@
                                 <a class="ms-3 my-0 mr-md-auto font-weight-normal text-decoration-none" href="/users/edit_user/{{user.pk}}/">Пользователь: {{user.email}}</a>
                         <form action="{% url 'users:logout' %}" method="post">
                              {% csrf_token %}
-                        <button type="submit" class="btn btn_primery">ВЫХОД</button>
+                        <button type="submit" class="btn btn-primary">ВЫХОД</button>
                         </form>
                     {% else %}
-                        <a href="{% url 'users:login'%}" class="btn btn_primery">ВХОД</a>
-                        <a href="{% url 'users:registration'%}" class="btn btn_primery">РЕГИСТРАЦИЯ</a>
+                        <a href="{% url 'users:login'%}" class="btn btn-primary">ВХОД</a>
+                        <a href="{% url 'users:registration'%}" class="btn btn-primary">РЕГИСТРАЦИЯ</a>
                     {% endif %}
                 </div>
         </div>

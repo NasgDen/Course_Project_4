@@ -1,12 +1,32 @@
             <H1 class="side_menu__header"> Меню</H1>
             <ul>
-                <h3></h3>
-                <a href="{% url 'message:recipient_list'%}" class="link">Управление клиентами</a>
-                <a href="{% url 'message:recipient_add'%}" class="link">Добавить клиета</a>
-                <a href="{% url 'message:message_list'%}" class="link">Управление письмаим</a>
-                <a href="{% url 'message:message_add'%}" class="link">Добавить письмо</a>
-                <a href="{% url 'message:distribution_list'%}" class="link">Управление рассылками</a>
-                <a href="{% url 'message:distribution_add'%}" class="link">Добавить рассылку</a>
+                {% if "message.view_mailingrecipient" in perms %}
+                    <a href="{% url 'message:recipient_list'%}" class="link">Управление клиентами</a>
+                {% endif %}
+
+                {% if "message.add_mailingrecipient" in perms %}
+                    <a href="{% url 'message:recipient_add'%}" class="link">Добавить клиета</a>
+                {% endif %}
+
+                {% if "message.view_message" in perms %}
+                    <a href="{% url 'message:message_list'%}" class="link">Управление письмаим</a>
+                {% endif %}
+
+                {% if "message.add_message" in perms %}
+                 <a href="{% url 'message:message_add'%}" class="link">Добавить письмо</a>
+                {% endif %}
+
+                {% if "message.view_distribution" in perms %}
+                    <a href="{% url 'message:distribution_list'%}" class="link">Управление рассылками</a>
+                {% endif %}
+
+                {% if "message.add_distribution" in perms %}
+                    <a href="{% url 'message:distribution_add'%}" class="link">Добавить рассылку</a>
+                {% endif %}
+
+
                 <a href="{% url 'message:statistics'%}" class="link">Статистика</a>
-                <a href="{% url 'users:user_list'%}" class="link">Пользователи</a>
+                {% if "users.view_customuser" in perms %}
+                    <a href="{% url 'users:user_list'%}" class="link">Пользователи</a>
+                {% endif %}
             </ul>
