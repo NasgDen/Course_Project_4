@@ -4,7 +4,7 @@ from message.apps import MessageConfig
 from .views import MailingRecipientListView, MailingRecipientCreateView, MailingRecipientUpdateView, \
     MailingRecipientDeleteView, MailingRecipientDetailView, MessageListView, MessageCreateView, MessageUpdateView, \
     MessageDeleteView, DistributionListView, DistributionCreateView, DistributionUpdateView, DistributionDeleteView, \
-    MessageDetailView, DistributionDetailView, SendMessageView, IndexListView, StatisticView
+    MessageDetailView, DistributionDetailView, SendMessageView, IndexListView, StatisticView, DisablingView
 
 app_name = MessageConfig.name
 
@@ -27,4 +27,5 @@ urlpatterns = [
     path('distribution_detail/<int:pk>/', DistributionDetailView.as_view(), name='distribution_detail'),
     path('distribution_detail/send_message/<int:pk>/', SendMessageView.as_view(), name='send_message'),
     path('statistics/', StatisticView.as_view(), name='statistics'),
+    path('distribution_detail/block_distribution/<int:pk>/', DisablingView.as_view(), name='block_distribution'),
 ]

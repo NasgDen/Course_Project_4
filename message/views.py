@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Permission
-from django.shortcuts import redirect
+from django.http import HttpResponseForbidden
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView, View
 
@@ -231,6 +232,25 @@ class StatisticView(ListView):
         context['attempted_mailing_filter_by_user_not_successful'] = attempted.filter(status='Не успешно').count()
         context['distribution_count_сompleted'] = Distribution.objects.filter(status='Завершена' ,owner=self.request.user).count()
         return context
+
+
+class DisablingView(ListView):
+    """ Класс реализующий интерфейс для блокировки рассылки """
+
+    def post(self, request, *args, **kwargs):
+
+        distribution_id = kwargs["pk"]
+        distribution = get_object_or_404(Distribution, id=distribution_id)
+        if not request.user.groups.filter(name='Manager').exists():
+            return HttpResponseForbidden("У вас нет прав для блокировки рассылки.")
+        if distribution.mailings_status:
+            distribution.mailings_status = False
+        else:
+            distribution.mailings_status = True
+        distribution.save()
+
+        return redirect('message:distribution_detail', pk=distribution_id)
+
 
 
 

@@ -56,6 +56,7 @@ class Distribution(models.Model):
     recipients = models.ManyToManyField(MailingRecipient, related_name='distributions', verbose_name='Получатели')
     owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, related_name='distributions', verbose_name='Владелец',
                               blank=True, null=True)
+    mailings_status = models.BooleanField(default=False, verbose_name='Статус отключения рассылки',)
 
     def __str__(self):
         return f"{self.recipients} - {self.message} - {self.status}"
@@ -64,6 +65,7 @@ class Distribution(models.Model):
         verbose_name = 'Рассылка'
         verbose_name_plural = 'Рассылки'
         ordering = ['status',]
+        permissions = [('can_disabling_mailings_product', 'can disabling mailings product')]
 
 class AttemptedMailing(models.Model):
     """ Описание полей модель - Попытка рассылка """
