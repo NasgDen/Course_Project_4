@@ -5,7 +5,8 @@ from django.urls import path, reverse_lazy
 from message.views import StatisticView
 from users.apps import UsersConfig
 from users.views import RegistrationView, email_varification, EditCustomUser, UserPasswordChangeView, UserPasswordReset, \
-    UserPasswordResetConfirmView, UserPasswordResetDoneView, UserPasswordResetCompleteView
+    UserPasswordResetConfirmView, UserPasswordResetDoneView, UserPasswordResetCompleteView, UserListView, \
+    UserDetailView, BlockUserView
 
 app_name = UsersConfig.name
 
@@ -20,4 +21,7 @@ urlpatterns = [
     path('password_reset_done/', UserPasswordResetDoneView.as_view(), name='password_reset_done'),
     path('password_reset/<uidb64>/<token>/', UserPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('password_reset/complete/', UserPasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('user_list/', UserListView.as_view(), name='user_list'),
+    path('user_detail/<int:pk>/', UserDetailView.as_view(), name='user_detail'),
+    path('user_detail/block_user/<int:pk>/', BlockUserView.as_view(), name='block_user'),
     ]

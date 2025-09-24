@@ -1,12 +1,15 @@
 import secrets
 
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import PasswordChangeView, PasswordResetView, PasswordResetConfirmView, \
     PasswordResetDoneView, PasswordResetCompleteView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, UpdateView
+from django.views import View
+from django.views.generic import CreateView, UpdateView, ListView, DetailView
 
 from config.settings import EMAIL_HOST_USER
 from users.forms import CustomUserCreationForm, CustomProfileForm, UserPasswordChangeForm, UserPasswordResetForm, \
@@ -91,3 +94,39 @@ def email_varification(request, token):
     user.is_active = True
     user.save()
     return redirect(reverse('users:login'))
+
+
+class UserListView(ListView):
+    """ Класс реализующий интерфейс для отображения информации о пользователях """
+
+    model = CustomUser
+    template_name = 'users/user_list.html'
+    context_object_name = 'users'
+
+
+class UserDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    """ Класс реализующий интерфейс для отображения детальной информации о пользователе """
+
+    model = CustomUser
+    template_name = 'users/user_detail.html'
+    context_object_name = 'user_detail'
+    permission_required = "users.view_customuser"
+
+
+class BlockUserView(LoginRequiredMixin, View):
+    """ Класс реализующий интерфейс для блокировки пользователя """
+
+    def post(self, request, *args, **kwargs):
+        user_id = kwargs["pk"]
+        print(f"User_id {user_id}")
+        user = get_object_or_404(CustomUser, id=user_id)
+        print(f"User {user.email}")
+        if not request.user.groups.filter(name='Manager').exists():
+            return HttpResponseForbidden("У вас нет прав для публикации товара.")
+        if user.is_active:
+            user.is_active = False
+        else:
+            user.is_active = True
+        user.save()
+
+        return redirect('users:user_detail', pk=user_id)

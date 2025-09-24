@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Список Получателей{% endblock %}
+
+{% block content %}
+
+{% for user in users %}
+    <p class="content">Адрес электронной почты: {{user.email}}</p>
+    <a href="{% url 'users:user_detail' user.pk%}" class="btn btn_primery">Подробнее</a>
+{% endfor %}
+
+{% endblock %}
