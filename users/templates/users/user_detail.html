@@ -13,12 +13,11 @@
 <form action="{% url 'users:block_user' user_detail.id %}" method="post">
     {% csrf_token %}
     {% if user_detail.is_active %}
-        <button type="submit" class="btn btn-danger">Заблокировать</button>
+        <button type="submit" class="btn btn-outline-danger me-2">Заблокировать</button>
     {% else %}
-        <button type="submit" class="btn btn-primary">Активировать</button>
+        <button type="submit" class="btn btn-outline-success me-2">Активировать</button>
     {% endif %}
 </form>
-
-<a href="{% url 'users:user_list' %}" class="btn btn-primary">Назад</a>
+<a href="{% url 'users:user_list' %}" class="btn btn-outline-primary me-2">Назад</a>
 
 {% endblock %}

@@ -8,12 +8,12 @@
 <p class="content">ФИО: {{recipient.full_name}}</p>
 <p class="content">Коментарий: {{recipient.comment}}</p>
 {% if "message.change_mailingrecipient" in perms %}
-    <a href="{% url 'message:recipient_update' recipient.pk%}" class="btn btn_primery">Изменить</a>
+    <a href="{% url 'message:recipient_update' recipient.pk%}" class="btn btn-outline-success me-2">Изменить</a>
 {% endif %}
 {% if "message.delete_mailingrecipient" in perms %}
-    <a href="{% url 'message:recipient_delete' recipient.pk%}" class="btn btn_primery">Удалить</a>
+    <a href="{% url 'message:recipient_delete' recipient.pk%}" class="btn btn-outline-danger me-2">Удалить</a>
 {% endif %}
-<a href="{% url 'message:recipient_list' %}" class="btn btn_primery">Назад</a>
+<a href="{% url 'message:recipient_list' %}" class="btn btn-outline-primary me-2">Назад</a>
 
 
 {% endblock %}

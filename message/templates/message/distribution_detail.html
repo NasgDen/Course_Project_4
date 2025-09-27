@@ -15,19 +15,19 @@
 <p class="content">Статус: {{distribution.mailings_status | yesno:"Активный,Заблокирован"}} </p>
 
 {% if "message.change_distribution" in perms %}
-    <a href="{% url 'message:distribution_update' distribution.pk%}" class="btn btn_primery">Изменить</a>
+    <a href="{% url 'message:distribution_update' distribution.pk%}" class="btn btn-outline-success me-2">Изменить</a>
 {% endif %}
 {% if "message.change_distribution" in perms %}
-    <a href="{% url 'message:distribution_delete' distribution.pk%}" class="btn btn_primery">Удалить</a>
+    <a href="{% url 'message:distribution_delete' distribution.pk%}" class="btn btn-outline-danger me-2">Удалить</a>
 {% endif %}
 
 {% if "message.can_disabling_mailings_product_distribution" in perms %}
     <form action="{% url 'message:block_distribution' distribution.id %}" method="post">
         {% csrf_token %}
         {% if distribution.mailings_status %}
-        <button type="submit" class="btn btn_primery">Заблокировать</button>
+        <button type="submit" class="btn btn-outline-danger me-2">Заблокировать</button>
         {% else %}
-        <button type="submit" class="btn btn_primery">Активировать</button>
+        <button type="submit" class="btn btn-outline-success me-2">Активировать</button>
         {% endif %}
     </form>
 {% endif %}
@@ -35,11 +35,11 @@
 {% if distribution.owner == user and distribution.mailings_status %}
     <form action="{% url 'message:send_message' distribution.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn_primery">Отправить</button>
+        <button type="submit" class="btn btn-outline-success me-2">Отправить</button>
     </form>
 {% endif %}
 
-<a href="{% url 'message:distribution_list' %}" class="btn btn_primery">Назад</a>
+<a href="{% url 'message:distribution_list' %}" class="btn btn-outline-primary me-2">Назад</a>
 
 
 {% endblock %}

@@ -12,7 +12,7 @@
         {% endfor %}
         <p class="content">Статус: {{distribution.status}}</p>
 
-        <a href="{% url 'message:distribution_detail' distribution.pk%}" class="btn btn_primery">Подробнее</a>
+        <a href="{% url 'message:distribution_detail' distribution.pk%}" class="btn btn-outline-primary me-2">Подробнее</a>
     {% endif %}
 
 {% endfor %}

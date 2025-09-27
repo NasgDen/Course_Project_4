@@ -6,7 +6,7 @@
 
 {% for user in users %}
     <p class="content">Адрес электронной почты: {{user.email}}</p>
-    <a href="{% url 'users:user_detail' user.pk%}" class="btn btn_primery">Подробнее</a>
+    <a href="{% url 'users:user_detail' user.pk%}" class="btn btn-outline-primary me-2">Подробнее</a>
 {% endfor %}
 
 {% endblock %}
