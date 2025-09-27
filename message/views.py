@@ -16,7 +16,7 @@ class MailingRecipientCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
     template_name = 'message/recipient_add.html'
     fields = ['email', 'full_name', 'comment',]
     context_object_name = 'recipient'
-    permission_required = "message.create_mailingrecipient"
+    permission_required = "message.add_mailingrecipient"
     success_url = reverse_lazy('message:recipient_list')
 
     def form_valid(self, form):
@@ -24,6 +24,7 @@ class MailingRecipientCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
         user = self.request.user
         recipient.owner = user
         recipient.save()
+        MessageService.set_mailing_recipient_to_cache()
         return super().form_valid(form)
 
 
@@ -82,7 +83,7 @@ class MessageCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
     fields = ['subject', 'text',]
     context_object_name = 'message'
     success_url = reverse_lazy('message:message_list')
-    permission_required = "message.change_message"
+    permission_required = "message.add_message"
 
 
     def form_valid(self, form):
@@ -90,6 +91,7 @@ class MessageCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
         user = self.request.user
         message.owner = user
         message.save()
+        MessageService.set_message_to_cache()
         return super().form_valid(form)
 
 
@@ -146,7 +148,7 @@ class DistributionCreateView(LoginRequiredMixin, PermissionRequiredMixin, Create
     template_name = 'message/distribution_add.html'
     fields = ['message', 'recipients',]
     context_object_name = 'distribution'
-    permission_required = "message.create_distribution"
+    permission_required = "message.add_distribution"
     success_url = reverse_lazy('message:distribution_list')
 
     def form_valid(self, form):
@@ -154,6 +156,7 @@ class DistributionCreateView(LoginRequiredMixin, PermissionRequiredMixin, Create
         user = self.request.user
         distribution.owner = user
         distribution.save()
+        MessageService.set_distribution_to_cache()
         return super().form_valid(form)
 
 

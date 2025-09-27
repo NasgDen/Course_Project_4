@@ -59,6 +59,7 @@ class MessageService:
     @staticmethod
     def get_mailing_recipient_from_cache():
         """ Функция получает данные о получателях рассылки из кеша, если кеш пуст, то из базы данных """
+
         if not CACHE_ENABLE:
             return MailingRecipient.objects.all()
 
@@ -72,8 +73,18 @@ class MessageService:
             return mailing_recipient
 
     @staticmethod
+    def set_mailing_recipient_to_cache():
+        """ Функция обновляет данные о получателях рассылки в кеше при их создании или изменении """
+
+        if CACHE_ENABLE:
+            key_recipient = "mailing_recipient_list"
+            mailing_recipient = MailingRecipient.objects.all()
+            cache.set(key_recipient, mailing_recipient, 60 * 5)
+
+    @staticmethod
     def get_message_from_cache():
         """ Функция получает данные о письмах из кеша, если кеш пуст, то из базы данных """
+
         if not CACHE_ENABLE:
             return Message.objects.all()
 
@@ -87,8 +98,18 @@ class MessageService:
             return message
 
     @staticmethod
+    def set_message_to_cache():
+        """ Функция обновляет данные о письмах в кеше при их создании или изменении """
+
+        if CACHE_ENABLE:
+            key_message = "message_list"
+            message = Message.objects.all()
+            cache.set(key_message, message, 60 * 5)
+
+    @staticmethod
     def get_distribution_from_cache():
         """ Функция получает данные о рассылках из кеша, если кеш пуст, то из базы данных """
+
         if not CACHE_ENABLE:
             return Distribution.objects.all()
 
@@ -100,3 +121,12 @@ class MessageService:
             distribution = Distribution.objects.all()
             cache.set(key_distribution, distribution, 60 * 5)
             return distribution
+
+    @staticmethod
+    def set_distribution_to_cache():
+        """ Функция обновляет данные о письмах в кеше при их создании или изменении """
+
+        if CACHE_ENABLE:
+            key_distribution = "distribution_list"
+            distribution = Distribution.objects.all()
+            cache.set(key_distribution, distribution, 60 * 5)
