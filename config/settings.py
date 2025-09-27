@@ -111,3 +111,13 @@ LOGIN_REDIRECT_URL = 'message:index'
 LOGOUT_REDIRECT_URL = 'message:index'
 
 LOGIN_URL = 'users:login'
+
+CACHE_ENABLE = True
+
+if CACHE_ENABLE:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': os.getenv('LOCATION'),
+        }
+    }
