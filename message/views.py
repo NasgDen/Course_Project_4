@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView, View
 
 from .models import MailingRecipient, Message, Distribution, AttemptedMailing
-from .services import send_message, attempted_mailing
+from .services import MessageService
 
 
 class MailingRecipientCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -39,6 +39,9 @@ class MailingRecipientListView(LoginRequiredMixin, PermissionRequiredMixin, List
         context = super().get_context_data(**kwargs)
         context['manager'] = self.request.user.groups.filter(name='Manager').exists()
         return context
+
+    def get_queryset(self):
+        return MessageService.get_mailing_recipient_from_cache()
 
 
 class MailingRecipientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -196,12 +199,12 @@ class DistributionDetailView(LoginRequiredMixin, PermissionRequiredMixin, Detail
 
 
 class SendMessageView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    """ Класс ревлизующий интерфейс для отправки сообщения """
+    """ Класс реализующий интерфейс для отправки сообщения """
 
     def post(self, request,  *args, **kwargs):
         distribution_id = kwargs["pk"]
-        error = send_message(distribution_id)
-        attempted_mailing(distribution_id, error)
+        error = MessageService.send_message(distribution_id)
+        MessageService.attempted_mailing(distribution_id, error)
         return redirect('message:distribution_list')
 
 class IndexListView(ListView):
