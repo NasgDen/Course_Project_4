@@ -170,6 +170,9 @@ class DistributionListView(LoginRequiredMixin, PermissionRequiredMixin, ListView
         context['manager'] = self.request.user.groups.filter(name='Manager').exists()
         return context
 
+    def get_queryset(self):
+        return MessageService.get_distribution_from_cache()
+
 
 class DistributionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """ Класс реализующий интерфейс для изменения рассылки """

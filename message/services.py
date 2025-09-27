@@ -64,7 +64,6 @@ class MessageService:
 
         key_recipient = "mailing_recipient_list"
         mailing_recipient = cache.get(key_recipient)
-        print("CACHE", mailing_recipient)
         if mailing_recipient is not None:
             return mailing_recipient
         else:
@@ -80,10 +79,24 @@ class MessageService:
 
         key_message = "message_list"
         message = cache.get(key_message)
-        print("CACHE", message)
         if message is not None:
             return message
         else:
             message = Message.objects.all()
             cache.set(key_message, message, 60 * 5)
             return message
+
+    @staticmethod
+    def get_distribution_from_cache():
+        """ Функция получает данные о рассылках из кеша, если кеш пуст, то из базы данных """
+        if not CACHE_ENABLE:
+            return Distribution.objects.all()
+
+        key_distribution = "distribution_list"
+        distribution = cache.get(key_distribution)
+        if distribution is not None:
+            return distribution
+        else:
+            distribution = Distribution.objects.all()
+            cache.set(key_distribution, distribution, 60 * 5)
+            return distribution
