@@ -1,8 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Permission
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.core.cache import cache
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView, View
 
 from .models import MailingRecipient, Message, Distribution, AttemptedMailing
@@ -55,6 +56,11 @@ class MailingRecipientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Up
     permission_required = "message.change_mailingrecipient"
     success_url = reverse_lazy('message:recipient_list')
 
+    def form_valid(self, form):
+        recipient = form.save()
+        MessageService.set_mailing_recipient_to_cache()
+        return super().form_valid(form)
+
 
 class MailingRecipientDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """ Класс реализующий интерфейс для удаления информации о получателе сообщения """
@@ -64,6 +70,11 @@ class MailingRecipientDeleteView(LoginRequiredMixin, PermissionRequiredMixin, De
     context_object_name = 'recipient'
     permission_required = "message.delete_mailingrecipient"
     success_url = reverse_lazy('message:recipient_list')
+
+    def form_valid(self, form):
+        key_recipient = "mailing_recipient_list"
+        cache.delete(key_recipient)
+        return super().form_valid(form)
 
 
 class MailingRecipientDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -122,6 +133,11 @@ class MessageUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
     success_url = reverse_lazy('message:message_list')
     permission_required = "message.change_message"
 
+    def form_valid(self, form):
+        message = form.save()
+        MessageService.set_message_to_cache()
+        return super().form_valid(form)
+
 
 class MessageDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """ Класс реализующий интерфейс для удаления информации о сообщений """
@@ -131,6 +147,10 @@ class MessageDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
     context_object_name = 'message'
     success_url = reverse_lazy('message:message_list')
     permission_required = "message.delete_message"
+
+    def form_valid(self, form):
+        MessageService.delete_message_to_cache()
+        return super().form_valid(form)
 
 
 class MessageDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -187,6 +207,11 @@ class DistributionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
     permission_required = "message.change_distribution"
     success_url = reverse_lazy('message:distribution_list')
 
+    def form_valid(self, form):
+        distribution = form.save()
+        MessageService.set_distribution_to_cache()
+        return super().form_valid(form)
+
 
 class DistributionDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     """ Класс реализующий интерфейс для удаления рассылки """
@@ -197,6 +222,9 @@ class DistributionDeleteView(LoginRequiredMixin, PermissionRequiredMixin, Delete
     permission_required = "message.delete_distribution"
     success_url = reverse_lazy('message:distribution_list')
 
+    def form_valid(self, form):
+        MessageService.delete_distribution_to_cache()
+        return super().form_valid(form)
 
 class DistributionDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     """ Класс реализующий интерфейс для отображения детальной информации о рассылке """

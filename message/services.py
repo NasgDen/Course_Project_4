@@ -82,6 +82,14 @@ class MessageService:
             cache.set(key_recipient, mailing_recipient, 60 * 5)
 
     @staticmethod
+    def delete_mailing_recipient_to_cache():
+        """ Функция удаляет данные о получателях рассылки из кеша """
+
+        if CACHE_ENABLE:
+            key_recipient = "mailing_recipient_list"
+            cache.delete(key_recipient)
+
+    @staticmethod
     def get_message_from_cache():
         """ Функция получает данные о письмах из кеша, если кеш пуст, то из базы данных """
 
@@ -107,6 +115,14 @@ class MessageService:
             cache.set(key_message, message, 60 * 5)
 
     @staticmethod
+    def delete_message_to_cache():
+        """ Функция удаляет данные о письмах из кеша """
+
+        if CACHE_ENABLE:
+            key_message = "message_list"
+            cache.delete(key_message)
+
+    @staticmethod
     def get_distribution_from_cache():
         """ Функция получает данные о рассылках из кеша, если кеш пуст, то из базы данных """
 
@@ -130,3 +146,11 @@ class MessageService:
             key_distribution = "distribution_list"
             distribution = Distribution.objects.all()
             cache.set(key_distribution, distribution, 60 * 5)
+
+    @staticmethod
+    def delete_distribution_to_cache():
+        """ Функция удаляет данные о письмах из кеша """
+
+        if CACHE_ENABLE:
+            key_distribution = "distribution_list"
+            cache.delete(key_distribution)
