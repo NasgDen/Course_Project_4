@@ -106,6 +106,9 @@ class MessageListView( LoginRequiredMixin, PermissionRequiredMixin, ListView):
         context['manager'] = self.request.user.groups.filter(name='Manager').exists()
         return context
 
+    def get_queryset(self):
+        return MessageService.get_message_from_cache()
+
 
 class MessageUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """ Класс реализующий интерфейс для детельной информации о сообщений """

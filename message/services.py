@@ -5,7 +5,7 @@ from django.core.cache import cache
 
 from config.settings import EMAIL_HOST_USER, CACHE_ENABLE
 
-from .models import Distribution, AttemptedMailing, MailingRecipient
+from .models import Distribution, AttemptedMailing, MailingRecipient, Message
 
 
 class MessageService:
@@ -71,3 +71,19 @@ class MessageService:
             mailing_recipient = MailingRecipient.objects.all()
             cache.set(key_recipient, mailing_recipient, 60 * 5)
             return mailing_recipient
+
+    @staticmethod
+    def get_message_from_cache():
+        """ Функция получает данные о письмах из кеша, если кеш пуст, то из базы данных """
+        if not CACHE_ENABLE:
+            return Message.objects.all()
+
+        key_message = "message_list"
+        message = cache.get(key_message)
+        print("CACHE", message)
+        if message is not None:
+            return message
+        else:
+            message = Message.objects.all()
+            cache.set(key_message, message, 60 * 5)
+            return message
