@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Список Получателей{% endblock %}
+
+{% block content %}
+
+{% for recipient in recipients %}
+    {% if recipient.owner == user or manager %}
+        <p class="content">EMAIL: {{recipient.email}}</p>
+        <p class="content">ФИО: {{recipient.full_name}}</p>
+        <p class="content">Коментарий: {{recipient.comment}}</p>
+        <a href="{% url 'message:recipient_detail' recipient.pk%}" class="btn btn-outline-primary me-2">Подробнее</a>
+    {% endif %}
+{% endfor %}
+
+{% endblock %}

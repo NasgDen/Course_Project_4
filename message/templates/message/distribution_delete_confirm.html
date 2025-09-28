@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Удаление {{distribution.recipients}}{% endblock %}
+
+{% block content %}
+
+<div>
+  <form method="post" enctype="multipart/form-data">
+    <p class="content">Вы действительно хотите удалить рассылку для получателей?</p>
+     {% for recipient in distribution.recipients.all %}
+        <p class="content">{{recipient}}</p>
+    {% endfor %}
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-danger me-2">Удалить</button>
+    <a href="{% url 'message:distribution_list' %}" class="btn btn-outline-primary me-2">Отмена</a>
+  </form>
+</div>
+
+{% endblock %}

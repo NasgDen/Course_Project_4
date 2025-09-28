@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+
+<p class="content">Количество успешных попыток рассылок: {{attempted_mailing_filter_by_user_successful}}</p>
+<p class="content">Количество не успешных попыток рассылок: {{attempted_mailing_filter_by_user_not_successful}}</p>
+<p class="content">количестве отправленных сообщений: {{distribution_count_сompleted}}</p>
+
+{% endblock %}

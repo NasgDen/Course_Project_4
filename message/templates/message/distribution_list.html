@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Список Получателей{% endblock %}
+
+{% block content %}
+
+{% for distribution in distributions %}
+    {% if distribution.owner == user or manager %}
+        <p class="content">Получатели:</p>
+        {% for recipient in distribution.recipients.all %}
+            <p class="content">{{recipient}}</p>
+        {% endfor %}
+        <p class="content">Статус: {{distribution.status}}</p>
+
+        <a href="{% url 'message:distribution_detail' distribution.pk%}" class="btn btn-outline-primary me-2">Подробнее</a>
+    {% endif %}
+
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Детальная игформация о Получателе{% endblock %}
+
+{% block content %}
+
+<p class="content">Тема письма: {{message.subject}}</p>
+<p class="content">Текст письма: {{message.text}}</p>
+{% if "message.change_message" in perms %}
+    <a href="{% url 'message:message_update' message.pk%}" class="btn btn-outline-success me-2">Изменить</a>
+{% endif %}
+{% if "message.delete_message" in perms %}
+    <a href="{% url 'message:message_delete' message.pk%}" class="btn btn-outline-danger me-2">Удалить</a>
+{% endif %}
+<a href="{% url 'message:message_list' %}" class="btn btn-outline-primary me-2">Назад</a>
+
+{% endblock %}

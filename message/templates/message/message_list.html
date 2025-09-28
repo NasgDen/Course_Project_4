@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Список Получателей{% endblock %}
+
+{% block content %}
+
+{% for message in messages %}
+    {% if message.owner == user or manager %}
+        <p class="content">Тема письма: {{message.subject}}</p>
+        <p class="content">Текст письма: {{message.text}}</p>
+        <a href="{% url 'message:message_detail' message.pk%}" class="btn btn-outline-primary me-2">Подробнее</a>
+    {% endif %}
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,38 @@
+            <H3>Меню</H3>
+        <div class="container">
+        <div class="row">
+            <div class="col-2 mt-2">
+                <nav class="nav flex-column">
+                {% if "message.view_mailingrecipient" in perms %}
+                    <a href="{% url 'message:recipient_list'%}" class="nav-link">Управление клиентами</a>
+                {% endif %}
+
+                {% if "message.add_mailingrecipient" in perms %}
+                    <a href="{% url 'message:recipient_add'%}" class="nav-link">Добавить клиета</a>
+                {% endif %}
+
+                {% if "message.view_message" in perms %}
+                    <a href="{% url 'message:message_list'%}" class="nav-link">Управление письмаим</a>
+                {% endif %}
+
+                {% if "message.add_message" in perms %}
+                 <a href="{% url 'message:message_add'%}" class="nav-link">Добавить письмо</a>
+                {% endif %}
+
+                {% if "message.view_distribution" in perms %}
+                    <a href="{% url 'message:distribution_list'%}" class="nav-link">Управление рассылками</a>
+                {% endif %}
+
+                {% if "message.add_distribution" in perms %}
+                    <a href="{% url 'message:distribution_add'%}" class="nav-link">Добавить рассылку</a>
+                {% endif %}
+
+
+                <a href="{% url 'message:statistics'%}" class="nav-link">Статистика</a>
+                {% if "users.view_customuser" in perms %}
+                    <a href="{% url 'users:user_list'%}" class="nav-link">Пользователи</a>
+                {% endif %}
+                  </nav>
+            </div>
+        </div>
+    </div>

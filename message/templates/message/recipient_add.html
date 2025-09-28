@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Создать получателя{% endblock %}
+
+{% block content %}
+<h1>
+  {% if recipient %}
+    ФОРМА ИЗМЕНЕНИЯ ТОВАРА
+  {% else %}
+    ФОРМА ДОБАВЛЕНИЯ ТОВАРА
+  {% endif %}
+</h1>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if recipient %}
+    <button type="submit" class="btn btn-outline-success me-2">Изменить</button>
+  {% else %}
+    <button type="submit" class="btn btn-outline-success me-2">Добавить</button>
+  {% endif %}
+</form>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Детальная игформация о Пользователе{% endblock %}
+
+{% block content %}
+
+    <p class="content">Адрес электронной почты: {{user_detail.email}}</p>
+    <p class="content">Номер телефона: {{user_detail.phone_number}}</p>
+    <p class="content">Имя: {{user_detail.name}}</p>
+    <p class="content">Страна: {{user_detail.country}}</p>
+    <p class="content">Статус: {{user_detail.is_active | yesno:"Активный,Заблокирован"}} </p>
+
+<form action="{% url 'users:block_user' user_detail.id %}" method="post">
+    {% csrf_token %}
+    {% if user_detail.is_active %}
+        <button type="submit" class="btn btn-outline-danger me-2">Заблокировать</button>
+    {% else %}
+        <button type="submit" class="btn btn-outline-success me-2">Активировать</button>
+    {% endif %}
+</form>
+<a href="{% url 'users:user_list' %}" class="btn btn-outline-primary me-2">Назад</a>
+
+{% endblock %}
