@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "message",
     "users",
+    "django_apscheduler",
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,6 @@ if CACHE_ENABLE:
             'LOCATION': os.getenv('LOCATION'),
         }
     }
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25

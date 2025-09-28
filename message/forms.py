@@ -8,12 +8,6 @@ class StyleFormMixin:
         super().__init__(*args, **kwargs)
         for fild_name, field in self.fields.items():
             field.widget.attrs['class'] = "form-control"
-            if fild_name == 'name':
-                field.widget.attrs['placeholder'] = "Введите название товара"
-            elif fild_name == 'description':
-                field.widget.attrs['placeholder'] = "Введите описание товара"
-            elif fild_name == 'is_published':
-                field.widget.attrs['class'] = "form-check-input"
 
 
 class MailingRecipientForm(StyleFormMixin, forms.ModelForm):
