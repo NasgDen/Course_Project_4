@@ -8,14 +8,15 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 
 from .models import MailingRecipient, Message, Distribution, AttemptedMailing
 from .services import MessageService
+from .forms import MailingRecipientForm, MessageForm, DistributionForm
 
 
 class MailingRecipientCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """ Класс реализующий интерфейс для создания информации о получателе сообщения """
 
     model = MailingRecipient
+    form_class = MailingRecipientForm
     template_name = 'message/recipient_add.html'
-    fields = ['email', 'full_name', 'comment',]
     context_object_name = 'recipient'
     permission_required = "message.add_mailingrecipient"
     success_url = reverse_lazy('message:recipient_list')
@@ -51,7 +52,7 @@ class MailingRecipientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Up
 
     model = MailingRecipient
     template_name = 'message/recipient_add.html'
-    fields = ['email', 'full_name', 'comment',]
+    form_class = MailingRecipientForm
     context_object_name = 'recipient'
     permission_required = "message.change_mailingrecipient"
     success_url = reverse_lazy('message:recipient_list')
@@ -91,7 +92,7 @@ class MessageCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
 
     model = Message
     template_name = 'message/message_add.html'
-    fields = ['subject', 'text',]
+    form_class = MessageForm
     context_object_name = 'message'
     success_url = reverse_lazy('message:message_list')
     permission_required = "message.add_message"
@@ -128,7 +129,7 @@ class MessageUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
 
     model = Message
     template_name = 'message/message_add.html'
-    fields = ['subject', 'text',]
+    form_class = MessageForm
     context_object_name = 'message'
     success_url = reverse_lazy('message:message_list')
     permission_required = "message.change_message"
@@ -166,7 +167,7 @@ class DistributionCreateView(LoginRequiredMixin, PermissionRequiredMixin, Create
 
     model = Distribution
     template_name = 'message/distribution_add.html'
-    fields = ['message', 'recipients',]
+    form_class = DistributionForm
     context_object_name = 'distribution'
     permission_required = "message.add_distribution"
     success_url = reverse_lazy('message:distribution_list')
@@ -202,7 +203,7 @@ class DistributionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
 
     model = Distribution
     template_name = 'message/distribution_add.html'
-    fields = ['message', 'recipients',]
+    form_class = DistributionForm
     context_object_name = 'distribution'
     permission_required = "message.change_distribution"
     success_url = reverse_lazy('message:distribution_list')
