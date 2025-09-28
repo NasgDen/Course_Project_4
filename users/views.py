@@ -76,7 +76,7 @@ class UserPasswordResetDoneView(PasswordResetDoneView):
 
 
 class UserPasswordResetConfirmView(SuccessMessageMixin, PasswordResetConfirmView):
-     """ Контроллер для представление установки нового пароля """
+     """ Контроллер для предстовление установки нового пароля """
 
      form_class = UserSetNewPasswordForm
      template_name = 'users/password_reset_confirm.html'

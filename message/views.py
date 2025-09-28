@@ -108,7 +108,7 @@ class MessageCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
 
 
 class MessageListView( LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    """ Класс реализующий интерфейс для отобраения информации о сообщениях """
+    """ Класс реализующий интерфейс для отображения информации о сообщениях """
 
     model = Message
     template_name = 'message/message_list.html'
@@ -125,7 +125,7 @@ class MessageListView( LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
 
 class MessageUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    """ Класс реализующий интерфейс для детельной информации о сообщений """
+    """ Класс реализующий интерфейс для детальной информации о сообщениях """
 
     model = Message
     template_name = 'message/message_add.html'
@@ -141,7 +141,7 @@ class MessageUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
 
 
 class MessageDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    """ Класс реализующий интерфейс для удаления информации о сообщений """
+    """ Класс реализующий интерфейс для удаления информации о сообщениях """
 
     model =  Message
     template_name = 'message/message_delete_confirm.html'
@@ -246,7 +246,7 @@ class SendMessageView(LoginRequiredMixin, PermissionRequiredMixin, View):
         return redirect('message:distribution_list')
 
 class IndexListView(ListView):
-    """ Класс ревлизующий интерфейс главной страницы """
+    """ Класс реализующий интерфейс главной страницы """
 
     model = Distribution
     template_name = "message/index.html"
@@ -260,7 +260,7 @@ class IndexListView(ListView):
 
 
 class StatisticView(ListView):
-    """ Класс реализующий интерфейс для отобраения информации о попытках рассылок для зарегистрированного пользователя """
+    """ Класс реализующий интерфейс для отображения информации о попытках рассылок для зарегистрированного пользователя """
 
     model = Distribution
     template_name = "message/statistic.html"
