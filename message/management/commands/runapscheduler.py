@@ -1,16 +1,15 @@
 import logging
 
-from django.conf import settings
-
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
+from django.conf import settings
 from django.core.mail import send_mail
 from django.core.management.base import BaseCommand
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django_apscheduler import util
 from django_apscheduler.jobstores import DjangoJobStore
 from django_apscheduler.models import DjangoJobExecution
-from django_apscheduler import util
 
 from config.settings import EMAIL_HOST_USER
 from message.models import Distribution
@@ -64,9 +63,7 @@ class Command(BaseCommand):
 
         scheduler.add_job(
             my_job,
-            trigger=CronTrigger(
-                day_of_week="sun", hour="19", minute="50"
-            ),
+            trigger=CronTrigger(day_of_week="sun", hour="19", minute="50"),
             id="my_job",  # The `id` assigned to each job MUST be unique
             max_instances=1,
             replace_existing=True,
@@ -82,9 +79,7 @@ class Command(BaseCommand):
             max_instances=1,
             replace_existing=True,
         )
-        logger.info(
-            "Added weekly job: 'delete_old_job_executions'."
-        )
+        logger.info("Added weekly job: 'delete_old_job_executions'.")
 
         try:
             logger.info("Starting scheduler...")

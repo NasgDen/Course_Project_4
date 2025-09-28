@@ -1,25 +1,24 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.models import Permission
-from django.http import HttpResponseForbidden, HttpResponseRedirect
-from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse_lazy
 from django.core.cache import cache
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView, View
+from django.http import HttpResponseForbidden
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
 
-from .models import MailingRecipient, Message, Distribution, AttemptedMailing
+from .forms import DistributionForm, MailingRecipientForm, MessageForm
+from .models import AttemptedMailing, Distribution, MailingRecipient, Message
 from .services import MessageService
-from .forms import MailingRecipientForm, MessageForm, DistributionForm
 
 
 class MailingRecipientCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    """ Класс реализующий интерфейс для создания информации о получателе сообщения """
+    """Класс реализующий интерфейс для создания информации о получателе сообщения"""
 
     model = MailingRecipient
     form_class = MailingRecipientForm
-    template_name = 'message/recipient_add.html'
-    context_object_name = 'recipient'
+    template_name = "message/recipient_add.html"
+    context_object_name = "recipient"
     permission_required = "message.add_mailingrecipient"
-    success_url = reverse_lazy('message:recipient_list')
+    success_url = reverse_lazy("message:recipient_list")
 
     def form_valid(self, form):
         recipient = form.save()
@@ -31,16 +30,16 @@ class MailingRecipientCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
 
 
 class MailingRecipientListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    """ Класс реализующий интерфейс для отображения информации о получателях сообщений """
+    """Класс реализующий интерфейс для отображения информации о получателях сообщений"""
 
     model = MailingRecipient
-    template_name = 'message/recipient_list.html'
-    context_object_name = 'recipients'
+    template_name = "message/recipient_list.html"
+    context_object_name = "recipients"
     permission_required = "message.view_mailingrecipient"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['manager'] = self.request.user.groups.filter(name='Manager').exists()
+        context["manager"] = self.request.user.groups.filter(name="Manager").exists()
         return context
 
     def get_queryset(self):
@@ -48,14 +47,14 @@ class MailingRecipientListView(LoginRequiredMixin, PermissionRequiredMixin, List
 
 
 class MailingRecipientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    """ Класс реализующий интерфейс для изменения информации о получателе сообщения """
+    """Класс реализующий интерфейс для изменения информации о получателе сообщения"""
 
     model = MailingRecipient
-    template_name = 'message/recipient_add.html'
+    template_name = "message/recipient_add.html"
     form_class = MailingRecipientForm
-    context_object_name = 'recipient'
+    context_object_name = "recipient"
     permission_required = "message.change_mailingrecipient"
-    success_url = reverse_lazy('message:recipient_list')
+    success_url = reverse_lazy("message:recipient_list")
 
     def form_valid(self, form):
         recipient = form.save()
@@ -64,13 +63,13 @@ class MailingRecipientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Up
 
 
 class MailingRecipientDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    """ Класс реализующий интерфейс для удаления информации о получателе сообщения """
+    """Класс реализующий интерфейс для удаления информации о получателе сообщения"""
 
     model = MailingRecipient
-    template_name = 'message/recipient_delete_confirm.html'
-    context_object_name = 'recipient'
+    template_name = "message/recipient_delete_confirm.html"
+    context_object_name = "recipient"
     permission_required = "message.delete_mailingrecipient"
-    success_url = reverse_lazy('message:recipient_list')
+    success_url = reverse_lazy("message:recipient_list")
 
     def form_valid(self, form):
         key_recipient = "mailing_recipient_list"
@@ -79,24 +78,23 @@ class MailingRecipientDeleteView(LoginRequiredMixin, PermissionRequiredMixin, De
 
 
 class MailingRecipientDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
-    """ Класс реализующий интерфейс для отображения детальной информации о получателе сообщения """
+    """Класс реализующий интерфейс для отображения детальной информации о получателе сообщения"""
 
     model = MailingRecipient
     template_name = "message/recipient_detail.html"
-    context_object_name = 'recipient'
+    context_object_name = "recipient"
     permission_required = "message.view_mailingrecipient"
 
 
 class MessageCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    """ Класс реализующий интерфейс для создания сообщения """
+    """Класс реализующий интерфейс для создания сообщения"""
 
     model = Message
-    template_name = 'message/message_add.html'
+    template_name = "message/message_add.html"
     form_class = MessageForm
-    context_object_name = 'message'
-    success_url = reverse_lazy('message:message_list')
+    context_object_name = "message"
+    success_url = reverse_lazy("message:message_list")
     permission_required = "message.add_message"
-
 
     def form_valid(self, form):
         message = form.save()
@@ -107,17 +105,17 @@ class MessageCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
         return super().form_valid(form)
 
 
-class MessageListView( LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    """ Класс реализующий интерфейс для отображения информации о сообщениях """
+class MessageListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    """Класс реализующий интерфейс для отображения информации о сообщениях"""
 
     model = Message
-    template_name = 'message/message_list.html'
-    context_object_name = 'messages'
+    template_name = "message/message_list.html"
+    context_object_name = "messages"
     permission_required = "message.view_message"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['manager'] = self.request.user.groups.filter(name='Manager').exists()
+        context["manager"] = self.request.user.groups.filter(name="Manager").exists()
         return context
 
     def get_queryset(self):
@@ -125,13 +123,13 @@ class MessageListView( LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
 
 class MessageUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    """ Класс реализующий интерфейс для детальной информации о сообщениях """
+    """Класс реализующий интерфейс для детальной информации о сообщениях"""
 
     model = Message
-    template_name = 'message/message_add.html'
+    template_name = "message/message_add.html"
     form_class = MessageForm
-    context_object_name = 'message'
-    success_url = reverse_lazy('message:message_list')
+    context_object_name = "message"
+    success_url = reverse_lazy("message:message_list")
     permission_required = "message.change_message"
 
     def form_valid(self, form):
@@ -141,12 +139,12 @@ class MessageUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
 
 
 class MessageDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    """ Класс реализующий интерфейс для удаления информации о сообщениях """
+    """Класс реализующий интерфейс для удаления информации о сообщениях"""
 
-    model =  Message
-    template_name = 'message/message_delete_confirm.html'
-    context_object_name = 'message'
-    success_url = reverse_lazy('message:message_list')
+    model = Message
+    template_name = "message/message_delete_confirm.html"
+    context_object_name = "message"
+    success_url = reverse_lazy("message:message_list")
     permission_required = "message.delete_message"
 
     def form_valid(self, form):
@@ -155,22 +153,23 @@ class MessageDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
 
 
 class MessageDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
-    """ Класс реализующий интерфейс для отображения детальной информации о сообщении """
+    """Класс реализующий интерфейс для отображения детальной информации о сообщении"""
+
     model = Message
     template_name = "message/message_detail.html"
-    context_object_name = 'message'
+    context_object_name = "message"
     permission_required = "message.view_message"
 
 
 class DistributionCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    """ Класс реализующий интерфейс для создания рассылки """
+    """Класс реализующий интерфейс для создания рассылки"""
 
     model = Distribution
-    template_name = 'message/distribution_add.html'
+    template_name = "message/distribution_add.html"
     form_class = DistributionForm
-    context_object_name = 'distribution'
+    context_object_name = "distribution"
     permission_required = "message.add_distribution"
-    success_url = reverse_lazy('message:distribution_list')
+    success_url = reverse_lazy("message:distribution_list")
 
     def form_valid(self, form):
         distribution = form.save()
@@ -182,16 +181,16 @@ class DistributionCreateView(LoginRequiredMixin, PermissionRequiredMixin, Create
 
 
 class DistributionListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    """ Класс реализующий интерфейс для отображения рассылки """
+    """Класс реализующий интерфейс для отображения рассылки"""
 
     model = Distribution
-    template_name = 'message/distribution_list.html'
-    context_object_name = 'distributions'
+    template_name = "message/distribution_list.html"
+    context_object_name = "distributions"
     permission_required = "message.view_distribution"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['manager'] = self.request.user.groups.filter(name='Manager').exists()
+        context["manager"] = self.request.user.groups.filter(name="Manager").exists()
         return context
 
     def get_queryset(self):
@@ -199,14 +198,14 @@ class DistributionListView(LoginRequiredMixin, PermissionRequiredMixin, ListView
 
 
 class DistributionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    """ Класс реализующий интерфейс для изменения рассылки """
+    """Класс реализующий интерфейс для изменения рассылки"""
 
     model = Distribution
-    template_name = 'message/distribution_add.html'
+    template_name = "message/distribution_add.html"
     form_class = DistributionForm
-    context_object_name = 'distribution'
+    context_object_name = "distribution"
     permission_required = "message.change_distribution"
-    success_url = reverse_lazy('message:distribution_list')
+    success_url = reverse_lazy("message:distribution_list")
 
     def form_valid(self, form):
         distribution = form.save()
@@ -215,74 +214,78 @@ class DistributionUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
 
 
 class DistributionDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    """ Класс реализующий интерфейс для удаления рассылки """
+    """Класс реализующий интерфейс для удаления рассылки"""
 
-    model =  Distribution
-    template_name = 'message/distribution_delete_confirm.html'
-    context_object_name = 'distribution'
+    model = Distribution
+    template_name = "message/distribution_delete_confirm.html"
+    context_object_name = "distribution"
     permission_required = "message.delete_distribution"
-    success_url = reverse_lazy('message:distribution_list')
+    success_url = reverse_lazy("message:distribution_list")
 
     def form_valid(self, form):
         MessageService.delete_distribution_to_cache()
         return super().form_valid(form)
 
+
 class DistributionDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
-    """ Класс реализующий интерфейс для отображения детальной информации о рассылке """
+    """Класс реализующий интерфейс для отображения детальной информации о рассылке"""
 
     model = Distribution
     template_name = "message/distribution_detail.html"
-    context_object_name = 'distribution'
+    context_object_name = "distribution"
     permission_required = "message.view_distribution"
 
 
 class SendMessageView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    """ Класс реализующий интерфейс для отправки сообщения """
+    """Класс реализующий интерфейс для отправки сообщения"""
 
-    def post(self, request,  *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         distribution_id = kwargs["pk"]
         error = MessageService.send_message(distribution_id)
         MessageService.attempted_mailing(distribution_id, error)
-        return redirect('message:distribution_list')
+        return redirect("message:distribution_list")
+
 
 class IndexListView(ListView):
-    """ Класс реализующий интерфейс главной страницы """
+    """Класс реализующий интерфейс главной страницы"""
 
     model = Distribution
     template_name = "message/index.html"
-    context_object_name = 'distribution'
+    context_object_name = "distribution"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['distribution_count_launched'] = Distribution.objects.filter(status='Запущена').count()
-        context['recipient_count'] = MailingRecipient.objects.count()
+        context["distribution_count_launched"] = Distribution.objects.filter(status="Запущена").count()
+        context["recipient_count"] = MailingRecipient.objects.count()
         return context
 
 
 class StatisticView(ListView):
-    """ Класс реализующий интерфейс для отображения информации о попытках рассылок для зарегистрированного пользователя """
+    """Класс реализующий интерфейс для отображения информации о попытках рассылок для зарегистрированного пользователя"""
 
     model = Distribution
     template_name = "message/statistic.html"
-    context_object_name = 'distribution'
+    context_object_name = "distribution"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         attempted = AttemptedMailing.objects.filter(distribution__owner=self.request.user)
-        context['attempted_mailing_filter_by_user_successful'] = attempted.filter(status='Успешно').count()
-        context['attempted_mailing_filter_by_user_not_successful'] = attempted.filter(status='Не успешно').count()
-        context['distribution_count_сompleted'] = Distribution.objects.filter(status='Завершена' ,owner=self.request.user).count()
+        context["attempted_mailing_filter_by_user_successful"] = attempted.filter(status="Успешно").count()
+        context["attempted_mailing_filter_by_user_not_successful"] = attempted.filter(status="Не успешно").count()
+        context["distribution_count_сompleted"] = Distribution.objects.filter(
+            status="Завершена", owner=self.request.user
+        ).count()
         return context
 
 
 class DisablingView(ListView):
-    """ Класс реализующий интерфейс для блокировки рассылки """
+    """Класс реализующий интерфейс для блокировки рассылки"""
 
     def post(self, request, *args, **kwargs):
 
         distribution_id = kwargs["pk"]
         distribution = get_object_or_404(Distribution, id=distribution_id)
-        if not request.user.groups.filter(name='Manager').exists():
+        if not request.user.groups.filter(name="Manager").exists():
             return HttpResponseForbidden("У вас нет прав для блокировки рассылки.")
         if distribution.mailings_status:
             distribution.mailings_status = False
@@ -290,8 +293,4 @@ class DisablingView(ListView):
             distribution.mailings_status = True
         distribution.save()
 
-        return redirect('message:distribution_detail', pk=distribution_id)
-
-
-
-
+        return redirect("message:distribution_detail", pk=distribution_id)

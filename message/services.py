@@ -1,19 +1,19 @@
+from django.core.cache import cache
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.core.cache import cache
 
-from config.settings import EMAIL_HOST_USER, CACHE_ENABLE
+from config.settings import CACHE_ENABLE, EMAIL_HOST_USER
 
-from .models import Distribution, AttemptedMailing, MailingRecipient, Message
+from .models import AttemptedMailing, Distribution, MailingRecipient, Message
 
 
 class MessageService:
-    """ Класс реализующий интерфейс сервисных функций """
+    """Класс реализующий интерфейс сервисных функций"""
 
     @staticmethod
     def send_message(distribution_id):
-        """ Функция реализует оправке письма """
+        """Функция реализует оправке письма"""
 
         distribution = get_object_or_404(Distribution, id=distribution_id)
 
@@ -40,25 +40,26 @@ class MessageService:
 
     @staticmethod
     def attempted_mailing(distribution_id, error):
-        """ Функция регистрирует попытки отправки рассылки """
+        """Функция регистрирует попытки отправки рассылки"""
 
         distribution = get_object_or_404(Distribution, id=distribution_id)
         if error:
-            attempt = AttemptedMailing.objects.create(attempt_datetime=timezone.now(),
-                                                      status='Не успешно',
-                                                      mail_server_response=error,
-                                                      distribution=distribution)
+            attempt = AttemptedMailing.objects.create(
+                attempt_datetime=timezone.now(),
+                status="Не успешно",
+                mail_server_response=error,
+                distribution=distribution,
+            )
             attempt.save()
         else:
-            attempt = AttemptedMailing.objects.create(attempt_datetime=timezone.now(),
-                                                      status='Успешно',
-                                                      mail_server_response='OK',
-                                                      distribution=distribution)
+            attempt = AttemptedMailing.objects.create(
+                attempt_datetime=timezone.now(), status="Успешно", mail_server_response="OK", distribution=distribution
+            )
             attempt.save()
 
     @staticmethod
     def get_mailing_recipient_from_cache():
-        """ Функция получает данные о получателях рассылки из кеша, если кеш пуст, то из базы данных """
+        """Функция получает данные о получателях рассылки из кеша, если кеш пуст, то из базы данных"""
 
         if not CACHE_ENABLE:
             return MailingRecipient.objects.all()
@@ -74,7 +75,7 @@ class MessageService:
 
     @staticmethod
     def set_mailing_recipient_to_cache():
-        """ Функция обновляет данные о получателях рассылки в кеше при их создании или изменении """
+        """Функция обновляет данные о получателях рассылки в кеше при их создании или изменении"""
 
         if CACHE_ENABLE:
             key_recipient = "mailing_recipient_list"
@@ -83,7 +84,7 @@ class MessageService:
 
     @staticmethod
     def delete_mailing_recipient_to_cache():
-        """ Функция удаляет данные о получателях рассылки из кеша """
+        """Функция удаляет данные о получателях рассылки из кеша"""
 
         if CACHE_ENABLE:
             key_recipient = "mailing_recipient_list"
@@ -91,7 +92,7 @@ class MessageService:
 
     @staticmethod
     def get_message_from_cache():
-        """ Функция получает данные о письмах из кеша, если кеш пуст, то из базы данных """
+        """Функция получает данные о письмах из кеша, если кеш пуст, то из базы данных"""
 
         if not CACHE_ENABLE:
             return Message.objects.all()
@@ -107,7 +108,7 @@ class MessageService:
 
     @staticmethod
     def set_message_to_cache():
-        """ Функция обновляет данные о письмах в кеше при их создании или изменении """
+        """Функция обновляет данные о письмах в кеше при их создании или изменении"""
 
         if CACHE_ENABLE:
             key_message = "message_list"
@@ -116,7 +117,7 @@ class MessageService:
 
     @staticmethod
     def delete_message_to_cache():
-        """ Функция удаляет данные о письмах из кеша """
+        """Функция удаляет данные о письмах из кеша"""
 
         if CACHE_ENABLE:
             key_message = "message_list"
@@ -124,7 +125,7 @@ class MessageService:
 
     @staticmethod
     def get_distribution_from_cache():
-        """ Функция получает данные о рассылках из кеша, если кеш пуст, то из базы данных """
+        """Функция получает данные о рассылках из кеша, если кеш пуст, то из базы данных"""
 
         if not CACHE_ENABLE:
             return Distribution.objects.all()
@@ -140,7 +141,7 @@ class MessageService:
 
     @staticmethod
     def set_distribution_to_cache():
-        """ Функция обновляет данные о письмах в кеше при их создании или изменении """
+        """Функция обновляет данные о письмах в кеше при их создании или изменении"""
 
         if CACHE_ENABLE:
             key_distribution = "distribution_list"
@@ -149,7 +150,7 @@ class MessageService:
 
     @staticmethod
     def delete_distribution_to_cache():
-        """ Функция удаляет данные о письмах из кеша """
+        """Функция удаляет данные о письмах из кеша"""
 
         if CACHE_ENABLE:
             key_distribution = "distribution_list"
